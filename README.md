@@ -17,6 +17,7 @@ QA Practice is a public web application for learning and practising software tes
 - [1. Project Overview](#1-project-overview)
 - [2. Problem & Solution](#2-problem--solution)
 - [3. Technical Architecture](#3-technical-architecture)
+- [Architecture Diagrams](docs/architecture.md)
 - [4. Testing Capabilities](#4-testing-capabilities)
 - [5. Automation Opportunities (Playwright + TypeScript)](#5-automation-opportunities-playwright--typescript)
 - [6. QA Engineering Decisions](#6-qa-engineering-decisions)
@@ -39,7 +40,7 @@ QA Practice is a public web application for learning and practising software tes
 | API testing | 5 REST endpoints with contract checks and fault injection (500, missing field, wrong type, delay) |
 | Fault simulation | A global "QA test mode" with 8 switchable failure conditions |
 | Automation guidance | Playwright + TypeScript and Selenium + Java framework blueprints, plus a browser-based script runner |
-| Automated checks in the repo | 20 Node-based test scripts (unit and content checks), all passing on the latest commit |
+| Automated checks in the repo | 21 Node-based test scripts (unit, content and build-output checks), all passing on the latest commit |
 
 ---
 
@@ -71,6 +72,8 @@ The application is public and free to use. No installation is needed.
 ---
 
 ## 3. Technical Architecture
+
+> Diagrams of the application, testing and deployment architecture: **[docs/architecture.md](docs/architecture.md)**
 
 ### Stack
 
@@ -269,7 +272,7 @@ Supporting features in the app:
 
 ### 7.1 Existing automated checks (implemented)
 
-The repository contains **20 test scripts** that run with Node (`tsx`). DOM-level checks use `happy-dom`. They are fast unit and content checks, not browser end-to-end tests.
+The repository contains **21 test scripts** that run with Node (`tsx`). DOM-level checks use `happy-dom`. They are fast unit, content and build-output checks, not browser end-to-end tests.
 
 | Area | What the scripts verify |
 |---|---|
@@ -281,10 +284,11 @@ The repository contains **20 test scripts** that run with Node (`tsx`). DOM-leve
 | Framework blueprint | Blueprint content for both stacks is complete and consistent |
 | UI helpers | Portal menu positioning (including a 360 px viewport), markup diffs, challenge previews, dynamic IDs |
 | Routing / SEO | Legacy route redirects, canonical URLs, robots and sitemap entries |
+| Static export validation | Only allowed `.txt`, `.md` and `.zip` files reach the deploy archive (nested paths and case variations included); a failed check stops packaging and leaves the previous archive unchanged |
 
-**Result on the latest commit:** all 20 scripts exit successfully.
+**Result on the latest commit:** all 21 scripts exit successfully.
 
-**CI:** a GitHub Actions workflow runs the locator parser test on pushes and pull requests that touch the locator code. The other 19 scripts are currently run locally.
+**CI:** a GitHub Actions workflow runs the locator parser test on pushes and pull requests that touch the locator code. The complete suite of 21 scripts, including the other 20, is currently run locally.
 
 **Known gaps (stated honestly):**
 - A small number of checks are skipped because `happy-dom` cannot evaluate them (some XPath and CSS cases). They need a real Chromium run.
@@ -303,7 +307,7 @@ The repository contains **20 test scripts** that run with Node (`tsx`). DOM-leve
 - One regression test per seeded bug, asserting the defect is detectable
 - Error-state tests that turn on each QA mode flag and assert the fallback UI
 - Accessibility scans on key pages
-- Running the remaining 19 scripts plus a build check in CI
+- Running the remaining 20 scripts plus a build check in CI
 
 ---
 
@@ -354,7 +358,7 @@ The repository contains **20 test scripts** that run with Node (`tsx`). DOM-leve
 
 **What has been verified:**
 - The public home page is reachable. Its navigation and learning-path cards match the modules described above.
-- All 20 test scripts in the private repository pass on the latest commit.
+- All 21 test scripts in the private repository pass on the latest commit.
 
 **What is not claimed:** performance figures, uptime figures, user numbers, or results from an end-to-end suite against production. The live dashboard inside the app shows **sample data** for practice, not real metrics.
 
@@ -369,7 +373,7 @@ I designed, built and maintain QA Practice as a solo project. My work includes:
 - **Testability design:** stable test IDs, accessible roles and labels, deterministic data and the QA test mode fault switches
 - **Tooling:** the locator parser and evaluator, the Script Practice interpreter for Playwright TS and Selenium Java, and the in-browser Playwright project export
 - **QA content:** 15 seeded bugs with full reports and detection strategies, 50 locator challenges, 20 lessons, and 12 iframe / Shadow DOM scenarios
-- **Quality checks:** 20 Node-based test scripts and the GitHub Actions workflow for the locator parser
+- **Quality checks:** 21 Node-based test scripts, the static export validation, and the GitHub Actions workflow for the locator parser
 - **Deployment:** the static packaging pipeline and the production release of the live site
 
 ---
